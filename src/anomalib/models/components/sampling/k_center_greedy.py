@@ -99,7 +99,7 @@ class KCenterGreedy:
         selected_coreset_idxs: list[int] = []
         idx = int(torch.randint(high=self.n_observations, size=(1,)).item())
         # for _ in tqdm(range(self.coreset_size), desc="Selecting Coreset Indices."):
-        print(f"Start coreset selection. We need this many iterations: {self.coreset_size]")
+        print(f"Start coreset selection. We need this many iterations: {self.coreset_size}")
         q1 = False
         q2 = False
         q3 = False
