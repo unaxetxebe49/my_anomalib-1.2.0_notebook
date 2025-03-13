@@ -109,7 +109,6 @@ class KCenterGreedy:
             if idx in selected_idxs:
                 msg = "New indices should not be in selected indices."
                 raise ValueError(msg)
-            if self.coreset_size 
             self.min_distances[idx] = 0
             selected_coreset_idxs.append(idx)
             if not q1 and _ / self.coreset_size > 0.25:
