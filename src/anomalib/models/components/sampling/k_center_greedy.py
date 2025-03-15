@@ -52,13 +52,21 @@ class KCenterGreedy:
         """
         if cluster_centers:
             centers = self.features[cluster_centers]
+            
+            ###################################################################################################################################################################################################
+            # CHANGE
+            # distance = F.pairwise_distance(self.features, centers, p=2).reshape(-1, 1)
+            distance = torch.cdist(self.features, centers, p=2)
+            ###################################################################################################################################################################################################
 
-            distance = F.pairwise_distance(self.features, centers, p=2).reshape(-1, 1)
-
-            if self.min_distances is None:
-                self.min_distances = distance
-            else:
-                self.min_distances = torch.minimum(self.min_distances, distance)
+            ###################################################################################################################################################################################################
+            # CHANGE
+            # if self.min_distances is None:
+            #     self.min_distances = distance
+            # else:
+            #     self.min_distances = torch.minimum(self.min_distances, distance)
+            self.min_distances = distance if self.min_distances is None else torch.minimum(self.min_distances, distance)
+            ###################################################################################################################################################################################################
 
     def get_new_idx(self) -> int:
         """Get index value of a sample.
@@ -96,14 +104,14 @@ class KCenterGreedy:
             self.features = self.embedding.reshape(self.embedding.shape[0], -1)
             self.update_distances(cluster_centers=selected_idxs)
 
-        selected_coreset_idxs: list[int] = []
+        selected_coreset_idxs: list[int] = []        
         idx = int(torch.randint(high=self.n_observations, size=(1,)).item())
-        # for _ in tqdm(range(self.coreset_size), desc="Selecting Coreset Indices."):
-        print(f"Start coreset selection. We need this many iterations: {self.coreset_size}")
-        q1 = False
-        q2 = False
-        q3 = False
-        for _ in range(self.coreset_size):
+        # print(f"Start coreset selection. We need this many iterations: {self.coreset_size}")
+        # q1 = False
+        # q2 = False
+        # q3 = False
+        # for _ in range(self.coreset_size):
+        for _ in tqdm(range(self.coreset_size), desc="Selecting Coreset Indices."):
             self.update_distances(cluster_centers=[idx])
             idx = self.get_new_idx()
             if idx in selected_idxs:
@@ -111,15 +119,15 @@ class KCenterGreedy:
                 raise ValueError(msg)
             self.min_distances[idx] = 0
             selected_coreset_idxs.append(idx)
-            if not q1 and _ / self.coreset_size > 0.25:
-                q1 = True
-                print("Q1 done")
-            elif not q2 and _ / self.coreset_size > 0.5:
-                q2 = True
-                print("Q2 done")
-            elif not q3 and _ / self.coreset_size > 0.75:
-                q3 = True
-                print("Q3 done")
+            # if not q1 and _ / self.coreset_size > 0.25:
+            #     q1 = True
+            #     print("Q1 done")
+            # elif not q2 and _ / self.coreset_size > 0.5:
+            #     q2 = True
+            #     print("Q2 done")
+            # elif not q3 and _ / self.coreset_size > 0.75:
+            #     q3 = True
+            #     print("Q3 done")
 
         return selected_coreset_idxs
 
