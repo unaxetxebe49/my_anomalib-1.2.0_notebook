@@ -54,6 +54,8 @@ class Fastflow(AnomalyModule):
         self.model: FastflowModel
         self.loss = FastflowLoss()
 
+        self._setup()
+
     def _setup(self) -> None:
         if self.input_size is None:
             msg = "Fastflow needs input size to build torch model."
