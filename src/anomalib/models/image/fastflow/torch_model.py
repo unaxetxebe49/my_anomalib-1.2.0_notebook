@@ -269,5 +269,6 @@ class FastflowModel(nn.Module):
         feature = feature[:, 2:, :]
         batch_size, _, num_channels = feature.shape
         feature = feature.permute(0, 2, 1)
+        print(feature.shape)
         feature = feature.reshape(batch_size, num_channels, self.input_size[0] // 16, self.input_size[1] // 16)
         return [feature]
