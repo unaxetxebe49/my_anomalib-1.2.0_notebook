@@ -237,7 +237,7 @@ class FastflowModel(nn.Module):
         batch_size, _, num_channels = feature.shape
         feature = self.feature_extractor.norm(feature)
         feature = feature.permute(0, 2, 1)
-        feature = feature.reshape(batch_size, num_channels, self.input_size[0] // 28, self.input_size[1] // 28)
+        feature = feature.reshape(batch_size, num_channels, 28, 28)
         return [feature]
 
     def _get_vit_features(self, input_tensor: torch.Tensor) -> list[torch.Tensor]:
